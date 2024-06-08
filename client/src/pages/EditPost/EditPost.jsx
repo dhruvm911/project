@@ -35,8 +35,8 @@ const EditPost = () => {
                 <p className={styles.form_error_message}>
                     This is an error message
                 </p>
-                {/* <form className={`${styles.form} ${styles.create_post_form}`}> */}
-                <form className={styles.form}>
+                <form className={`${styles.form} ${styles.create_post_form}`}>
+                
                     <input type='text' placeholder='Title' value={title} onChange={e => setTitle(e.target.value)} autoFocus />
                     <select name="category" value={category} onChange={e => setCategory(e.target.value)}>
                         {
