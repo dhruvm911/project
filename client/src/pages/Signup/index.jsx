@@ -19,7 +19,7 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const url = "http://localhost:8080/api/users";
+            const url = "http://localhost:5000/api/users/register";
             const {data:res} = await axios.post(url,data);
             navigate("/login")
             console.log(res.message);
@@ -52,7 +52,7 @@ const Signup = () => {
                     {error && <div className={styles.error_msg}>{error}</div>}
                     <div>
                         <button className={styles.btn}>SIGN UP</button>
-                        <p>Have an Account? <Link className={styles.link} to="/">Login Here!</Link></p><a className={styles.link} href="">
+                        <p>Have an Account? <Link className={styles.link} to="/login">Login Here!</Link></p><a className={styles.link} href="">
                     </a></div><a className={styles.link} href="">
                 
             </a></form></div><a className={styles.link} href="">

@@ -1,7 +1,9 @@
+
 import styles from './styles.module.css';
-import {Link, } from 'react-router-dom';
+import {Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { UserContext } from '../../context/userContext';
 
 const Login = () => {
     const [data,setData] = useState({
@@ -9,8 +11,10 @@ const Login = () => {
         email: "",
         password: ""
     });
-    const [error,setError] = useState("")
-    
+    const [error,setError] = useState('')
+    const navigate = useNavigate()
+
+    const {setCurrentUser} = useContext(UserContext)
 
     const handleChange = ({currentTarget: input}) => {
         setData({...data,[input.name]:input.value});
@@ -19,10 +23,13 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const url = "http://localhost:8080/api/auth";
-            const {data:res} = await axios.post(url,data);
-            localStorage.setItem("token",res.data);
-            window.location = "/"
+            const url = "http://localhost:5000/api/users/login";
+            const response = await axios.post(url,data);
+            // localStorage.setItem("token",res.data);
+            // window.location = "/"
+            const user = await response.data;
+            setCurrentUser(user)
+            navigate('/')
             
         } catch (error) {
             if(error.response &&
@@ -50,7 +57,7 @@ const Login = () => {
                     {error && <div className={styles.error_msg}>{error}</div>}
                     <div>
                         <button className={styles.btn}>SIGN IN</button>
-                        <p>Don't Have an Account? <Link className={styles.link} to="/signup">Signup Here!</Link></p><a className={styles.link} href="">
+                        <p>Don't Have an Account? <Link className={styles.link} to="/register">Signup Here!</Link></p><a className={styles.link} href="">
                     </a></div><a className={styles.link} href="">
                 
             </a></form></div><a className={styles.link} href="">

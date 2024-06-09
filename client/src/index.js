@@ -22,17 +22,18 @@ import EditPost from './pages/EditPost/EditPost.jsx';
 import DeletePost from './pages/DeletePost/DeletePost.jsx';
 import Logout from './pages/Logout/Logout.jsx';
 import ErrorPage from './pages/ErrorPage/ErrorPage.jsx';
+import UserProvider from './context/userContext.js';
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout/>,
+    element: <UserProvider><Layout/></UserProvider>,
     errorElement: <ErrorPage/>,
     children: [
       {index: true, element: <Home/>},
       {path: "posts/:id",element: <PostDetail/>},
-      {path: "signup",element: <Signup/>},
+      {path: "register",element: <Signup/>},
       {path: "login",element: <Login/>},
       {path: "profile/:id",element: <UserProfile/>},
       {path: "authors",element: <Authors/>},

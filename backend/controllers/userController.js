@@ -75,7 +75,7 @@ const loginUser = async (req,res,next) => {
         const {_id:id,name} = user;
 
         const token = user.generateAuthToken();
-        res.status(200).send({ data: token, message: "Logged in successfully" ,id,name});
+        res.status(200).send({ token: token, message: "Logged in successfully" ,id,name});
     } catch (error) {
         console.error("Error logging in user:", error);
         res.status(500).send({ message: "Internal Server Error" });
@@ -159,7 +159,7 @@ const changeAvatar = async (req,res,next) => {
 //PROTECTED
 const editUser = async (req,res,next) => {
     try {
-        const {name, email, currentPassword, newPassword, ConfirmNewPassword} = req.body;
+        const {name, email, currentPassword, newPassword, confirmNewPassword} = req.body;
         if (!name || !email || ! currentPassword || !newPassword) {
             return next(new HttpError("Fill in all fields.", 422))
         }
@@ -182,7 +182,7 @@ const editUser = async (req,res,next) => {
         }
 
         //compare new passwords
-        if(newPassword !== ConfirmNewPassword) {
+        if(newPassword !== confirmNewPassword) {
             return next(new HttpError("New password do not match.",422))
         }
 
