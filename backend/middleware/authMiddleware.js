@@ -13,7 +13,7 @@ const authMiddleware = async (req, res, next) => {
             next()
         })
     } else {
-        return next(new HttpError("Unauthorized. Invalid token", 402))
+        return next(new HttpError("Unauthorized. Invalid token", 401))
     }
 }
 module.exports = authMiddleware

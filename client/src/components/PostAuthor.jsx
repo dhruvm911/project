@@ -24,7 +24,7 @@ const PostAuthor = ({authorID,createdAt}) => {
             }
         }
         getAuthor();
-    }, [])
+    }, [authorID])
 
     
   return (
