@@ -152,8 +152,8 @@ nav {
 }
 
 .nav_logo {
-    width: 3rem;
-    display: block;
+    width: 10rem;
+    display: flex;
 }
 
 .nav_menu {

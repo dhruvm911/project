@@ -1,17 +1,25 @@
 // src/components/CommentSection.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import './CommentSection.css';
+import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../../../context/userContext';
 
 const CommentSection = ({ postId }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
+  const {currentUser} = useContext(UserContext)
+  const navigate = useNavigate();
+  const token = currentUser?.token;
 
   useEffect(() => {
+    // if(!token) {
+    //   navigate('/login')
+    // }
     const fetchComments = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/comments?postId=${postId}`);
-        setComments(response.data);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/comments/${postId}`);
+        setComments(response?.data);
       } catch (error) {
         console.error('Error fetching comments:', error);
       }
@@ -27,9 +35,14 @@ const CommentSection = ({ postId }) => {
     event.preventDefault();
     if (newComment.trim()) {
       try {
-        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/comments`, {
+        const response = await axios.post(`http://localhost:5000/api/comments`, {
           postId,
           text: newComment,
+        }, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         });
         setComments([...comments, response.data]);
         setNewComment('');

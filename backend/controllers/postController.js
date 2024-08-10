@@ -3,9 +3,9 @@ const {User} = require('../models/userModel')
 const path = require('path')
 const fs = require('fs')
 const {v4: uuid} = require('uuid')
-const HttpError = require('../models/errorModel'
+const HttpError = require('../models/errorModel')
 
-)
+
 //=============CREATE A POST
 //POST: api/posts
 //PROTECTED
@@ -28,7 +28,7 @@ const createPost = async (req,res,next) => {
             if(err) {
                 return next(new HttpError(err))
             } else {
-                const newPost = await Post.create({title,category,description,thumbnail: newFilename, creator: req.user._id})
+                const newPost = await Post.create({title,category,description,thumbnail: newFilename, creator: req.user._id,likes:[]})
                 if(!newPost) {
                     return next(new HttpError("Post couldn't be created.",422))
                 }
@@ -188,4 +188,51 @@ const deletePost = async (req,res,next) => {
     }
 }
 
-module.exports = {createPost,getPosts,getPost,getCatPosts,getUserPosts,editPost,deletePost}
+const likePost = async (req, res, next) => {
+    const { postId, userId } = req.params;
+    try {
+        // console.log(`Like request: postId=${postId}, userId=${userId}`); // Log request data
+
+        const post = await Post.findById(postId);
+        if (!post) {
+            console.log('Post not found'); // Log error
+            return next(new HttpError('Post not found', 404));
+        }
+
+        if (!post.likes.includes(userId)) {
+            post.likes.push(userId);
+            await post.save();
+        }
+
+        res.status(200).json({ likes: post.likes });
+    } catch (error) {
+        console.error('Error in likePost:', error); // Added logging
+        return next(new HttpError('Internal Server Error', 500));
+    }
+};
+
+const unlikePost = async (req, res, next) => {
+    const { postId, userId } = req.params;
+    try {
+        // console.log(`Unlike request: postId=${postId}, userId=${userId}`); // Log request data
+
+        const post = await Post.findById(postId);
+        if (!post) {
+            console.log('Post not found'); // Log error
+            return next(new HttpError('Post not found', 404));
+        }
+
+        const index = post.likes.indexOf(userId);
+        if (index > -1) {
+            post.likes.splice(index, 1);
+            await post.save();
+        }
+
+        res.status(200).json({ likes: post.likes });
+    } catch (error) {
+        console.error('Error in unlikePost:', error); // Added logging
+        return next(new HttpError('Internal Server Error', 500));
+    }
+};
+
+module.exports = {createPost,getPosts,getPost,getCatPosts,getUserPosts,editPost,deletePost,likePost,unlikePost}

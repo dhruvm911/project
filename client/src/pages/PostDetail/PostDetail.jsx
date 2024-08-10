@@ -1,4 +1,3 @@
-// src/pages/PostDetail.jsx
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -7,6 +6,7 @@ import Loader from '../../components/Loader';
 import DeletePost from '../DeletePost/DeletePost';
 import { UserContext } from '../../context/userContext';
 import CommentSection from '../PostDetail/CommentSection/CommentSection';
+import LikeButton from './LikeButton/LikeButton';
 import styles from '../../components/styles.module.css';
 
 const PostDetail = () => {
@@ -64,6 +64,7 @@ const PostDetail = () => {
             />
           </div>
           <p dangerouslySetInnerHTML={{ __html: post.description }}></p>
+          <LikeButton postId={post._id} initialLikes={post.likes} userId={currentUser?.id} />
           <CommentSection postId={id} />
         </div>
       )}
